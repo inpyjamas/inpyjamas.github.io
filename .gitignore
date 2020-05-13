@@ -102,3 +102,11 @@ dist
 
 # TernJS port file
 .tern-port
+
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# Local Netlify folder
+.netlify
