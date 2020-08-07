@@ -1,0 +1,30 @@
+{
+  "data": {
+    "repos": [
+      {
+        "name": "generator-defaults",
+        "html_url": "https://github.com/inpyjamas/generator-defaults",
+        "stargazers_count": 1,
+        "updated_at": "2020-07-16T06:44:18Z"
+      },
+      {
+        "name": "inpyjamas.github.io",
+        "html_url": "https://github.com/inpyjamas/inpyjamas.github.io",
+        "stargazers_count": 0,
+        "updated_at": "2020-08-07T06:45:23Z"
+      },
+      {
+        "name": "scripts",
+        "html_url": "https://github.com/inpyjamas/scripts",
+        "stargazers_count": 1,
+        "updated_at": "2020-08-07T06:38:33Z"
+      },
+      {
+        "name": "renovate-config",
+        "html_url": "https://github.com/inpyjamas/renovate-config",
+        "stargazers_count": 0,
+        "updated_at": "2020-07-29T06:22:50Z"
+      }
+    ]
+  }
+}
