@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "W.I.P",
   "scripts": {
+    "prebuild": "npm run build:repos:list",
     "build": "eleventy",
-    "test": "echo \"Error: no test specified\" && exit 0",
-    "start": "eleventy --serve"
+    "test": "inpyjamas-scripts test",
+    "build:repos:list": "ts-node -r dotenv/config src/scripts/repos.ts",
+    "start": "eleventy --serve",
+    "dev": "eleventy --serve"
   },
   "repository": {
     "type": "git",
@@ -20,7 +23,13 @@
   "homepage": "https://github.com/inpyjamas/inpyjamas.github.io#readme",
   "devDependencies": {
     "@11ty/eleventy": "0.11.0",
-    "cz-conventional-changelog": "3.2.0"
+    "@inpyjamas/scripts": "0.1.7-alpha",
+    "@types/dotenv": "8.2.0",
+    "@types/mock-fs": "4.10.0",
+    "@types/node-fetch": "2.5.7",
+    "cz-conventional-changelog": "3.2.0",
+    "dotenv": "8.2.0",
+    "node-fetch": "2.6.0"
   },
   "config": {
     "commitizen": {

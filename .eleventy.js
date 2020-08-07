@@ -9,6 +9,9 @@ module.exports = function (eleventyConfig) {
     // // layouts: "_layouts",
     // output: "_site",
     // passthroughFileCopy: true,
+    // dir: {
+    //   data: "_data", // default
+    // },
     htmlTemplateEngine: "liquid",
     // markdownTemplateEngine: "liquid",
     // htmlTemplateEngine: "liquid",
