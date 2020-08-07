@@ -10,6 +10,9 @@ interface ReducedRepo {
   stargazers_count: number;
   updated_at: string;
 }
+export function fsCallback(err: any | null) {
+  if (err) throw err;
+}
 export function repoPropPicker({
   name,
   html_url,
@@ -27,7 +30,7 @@ export async function main(): Promise<void> {
       },
     });
     if (!response.ok) {
-      throw new Error(await response.text());
+      throw new Error("response not ok");
     }
     const json = await response.json();
     const repos: ReducedRepo[] = json.map((repo: Generic) => {
@@ -45,12 +48,11 @@ export async function main(): Promise<void> {
       path.resolve(__dirname, "../../_data/reposList.json"),
       JSON.stringify({ data: { repos } }),
       "utf8",
-      (err) => {
-        if (err) throw err;
-      },
+      fsCallback,
     );
   } catch (error) {
     console.error(error);
+    throw error;
   }
 }
 
