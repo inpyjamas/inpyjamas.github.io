@@ -23,7 +23,7 @@
   "homepage": "https://github.com/inpyjamas/inpyjamas.github.io#readme",
   "devDependencies": {
     "@11ty/eleventy": "0.12.1",
-    "@inpyjamas/scripts": "0.1.7-alpha",
+    "@inpyjamas/scripts": "1.0.0",
     "@types/dotenv": "8.2.0",
     "@types/mock-fs": "4.13.0",
     "@types/node-fetch": "2.5.10",
