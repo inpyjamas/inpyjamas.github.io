@@ -29,7 +29,7 @@
     "@types/node-fetch": "2.6.4",
     "cz-conventional-changelog": "3.3.0",
     "dotenv": "8.6.0",
-    "node-fetch": "2.6.11"
+    "node-fetch": "2.6.12"
   },
   "config": {
     "commitizen": {
