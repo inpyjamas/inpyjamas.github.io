@@ -25,11 +25,11 @@
     "@11ty/eleventy": "0.12.1",
     "@inpyjamas/scripts": "0.1.7-alpha",
     "@types/dotenv": "8.2.0",
-    "@types/mock-fs": "4.13.1",
-    "@types/node-fetch": "2.6.4",
+    "@types/mock-fs": "4.13.4",
+    "@types/node-fetch": "2.6.9",
     "cz-conventional-changelog": "3.3.0",
     "dotenv": "8.6.0",
-    "node-fetch": "2.6.12"
+    "node-fetch": "2.7.0"
   },
   "config": {
     "commitizen": {
