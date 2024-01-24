@@ -22,14 +22,14 @@
   },
   "homepage": "https://github.com/inpyjamas/inpyjamas.github.io#readme",
   "devDependencies": {
-    "@11ty/eleventy": "0.12.1",
-    "@inpyjamas/scripts": "0.1.7-alpha",
+    "@11ty/eleventy": "2.0.1",
+    "@inpyjamas/scripts": "1.0.0",
     "@types/dotenv": "8.2.0",
     "@types/mock-fs": "4.13.4",
     "@types/node-fetch": "2.6.10",
     "cz-conventional-changelog": "3.3.0",
-    "dotenv": "8.6.0",
-    "node-fetch": "2.7.0"
+    "dotenv": "16.4.1",
+    "node-fetch": "3.3.2"
   },
   "config": {
     "commitizen": {
