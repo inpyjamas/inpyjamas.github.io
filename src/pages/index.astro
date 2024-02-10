@@ -1,0 +1,198 @@
+---
+let data;
+
+const backupData = [
+  {
+    name: 'ws-broadcast',
+    html_url: 'https://github.com/inpyjamas/ws-broadcast',
+    stargazers_count: 5,
+    updated_at: '2021-12-28T20:14:24Z',
+  },
+  {
+    name: 'inpyjamas.github.io',
+    html_url: 'https://github.com/inpyjamas/inpyjamas.github.io',
+    stargazers_count: 1,
+    updated_at: '2022-11-15T05:18:02Z',
+  },
+  {
+    name: 'renovate-config',
+    html_url: 'https://github.com/inpyjamas/renovate-config',
+    stargazers_count: 1,
+    updated_at: '2022-04-05T08:04:35Z',
+  },
+  {
+    name: 'schemas',
+    html_url: 'https://github.com/inpyjamas/schemas',
+    stargazers_count: 1,
+    updated_at: '2021-03-14T08:42:56Z',
+  },
+];
+
+async function load() {
+  const res = await fetch('http://api.github.com/orgs/inpyjamas/repos', {
+    headers: {
+      Accept: 'application/vnd.github.v3+json',
+      authorization: `token ${process.env.GITHUB_TOKEN}`,
+    },
+  });
+  if (res.status === 200) {
+    const json = await res.json();
+    const repos = json.map((repo) => {
+      return repo.private === false &&
+        repo.fork === false &&
+        repo.archived === false
+        ? {
+            name: repo.name,
+            html_url: repo.html_url,
+            stargazers_count: repo.stargazers_count,
+            updated_at: repo.updated_at,
+          }
+        : {};
+    });
+
+    data = repos
+      .filter((repo) => Object.keys(repo).length !== 0)
+      .sort((a, b) => b.stargazers_count - a.stargazers_count);
+  } else {
+    data = backupData;
+  }
+}
+await load();
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>inpyjamas.dev</title>
+    <style is:global>
+      html {
+        box-sizing: border-box;
+      }
+      *,
+      *:before,
+      *:after {
+        box-sizing: inherit;
+      }
+
+      html {
+        font-size: 100%;
+      } /*16px*/
+      html {
+        height: 100%;
+      }
+
+      body {
+        align-items: center;
+        background-color: white;
+        color: #1d2429;
+        display: flex;
+        font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo,
+          Consolas, 'DejaVu Sans Mono', monospace;
+        font-weight: normal;
+
+        justify-content: center;
+        line-height: 1.65;
+        margin: 0 auto;
+        max-width: 50em;
+        padding: 4em 1em;
+      }
+
+      p {
+        margin-bottom: 1.15rem;
+        text-align: left;
+      }
+      ul {
+        text-align: left;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5 {
+        margin: 2.75rem 0 1.05rem;
+        font-family: 'Fira Mono', monospace;
+        font-weight: 400;
+        line-height: 1.15;
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 2.488em;
+      }
+
+      ul {
+        list-style: none;
+      }
+      li::before {
+        content: '☛ ';
+        color: tomato;
+      }
+      li:hover::before {
+        content: '⤻ ';
+        color: darkgray;
+      }
+      a {
+        color: tomato;
+        text-decoration: none;
+      }
+      a:hover {
+        color: darkgray;
+      }
+
+      /* Portrait and Landscape */
+      @media only screen and (max-device-width: 800px) and (-webkit-min-device-pixel-ratio: 2) {
+        html {
+          font-size: 60%;
+        }
+        body {
+          height: 100vh;
+          margin: 0 auto;
+          padding: 0 2em;
+        }
+        .container {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>hello @inpyjamas</h1>
+
+      <p>still in dev<span id="spinner">...</span></p>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          let count = 0;
+          let dots = ['.', '..', '...'];
+
+          const spinner = document.querySelector('#spinner');
+          if (spinner) {
+            setInterval(() => {
+              spinner.textContent = dots[count % dots.length];
+              count++;
+            }, 500);
+          }
+        });
+      </script>
+
+      <hr />
+      <p>
+        Until then checkout these repos
+        <ul>
+          {
+            data.map((repo) => (
+              <li>
+                <a href={repo.html_url}>{repo.name}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </p>
+    </div>
+  </body>
+</html>
