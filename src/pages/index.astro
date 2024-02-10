@@ -1,5 +1,14 @@
 ---
 let data;
+interface Repo {
+  name: string;
+  html_url: string;
+  stargazers_count: number;
+  updated_at: string;
+  private: boolean;
+  fork: boolean;
+  archived: boolean;
+}
 
 const backupData = [
   {
@@ -36,7 +45,7 @@ async function load() {
     },
   });
   if (res.status === 200) {
-    const json = await res.json();
+    const json = (await res.json()) as Repo[];
     const repos = json.map((repo) => {
       return repo.private === false &&
         repo.fork === false &&
@@ -50,9 +59,9 @@ async function load() {
         : {};
     });
 
-    data = repos
-      .filter((repo) => Object.keys(repo).length !== 0)
-      .sort((a, b) => b.stargazers_count - a.stargazers_count);
+    data = (
+      repos.filter((repo) => Object.keys(repo).length !== 0) as Repo[]
+    ).sort((a, b) => b.stargazers_count - a.stargazers_count);
   } else {
     data = backupData;
   }
