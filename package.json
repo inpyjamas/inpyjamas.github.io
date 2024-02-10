@@ -1,39 +1,21 @@
 {
-  "name": "inpyjamas.github.io",
-  "version": "1.0.0",
-  "description": "W.I.P",
+  "name": "inpjs",
+  "type": "module",
+  "version": "0.0.1",
   "scripts": {
-    "prebuild": "npm run build:repos:list",
-    "build": "eleventy",
-    "test": "inpyjamas-scripts test",
-    "build:repos:list": "ts-node -r dotenv/config src/scripts/repos.ts",
-    "start": "eleventy --serve",
-    "dev": "eleventy --serve"
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/inpyjamas/inpyjamas.github.io.git"
+  "dependencies": {
+    "@astrojs/check": "^0.5.2",
+    "@astrojs/netlify": "5.1.0",
+    "astro": "^4.3.5",
+    "typescript": "^5.3.3"
   },
-  "keywords": [],
-  "author": "Fabian Morón Zirfas",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/inpyjamas/inpyjamas.github.io/issues"
-  },
-  "homepage": "https://github.com/inpyjamas/inpyjamas.github.io#readme",
   "devDependencies": {
-    "@11ty/eleventy": "0.12.1",
-    "@inpyjamas/scripts": "0.1.7-alpha",
-    "@types/dotenv": "8.2.0",
-    "@types/mock-fs": "4.13.4",
-    "@types/node-fetch": "2.6.10",
-    "cz-conventional-changelog": "3.3.0",
-    "dotenv": "8.6.0",
-    "node-fetch": "2.7.0"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
+    "@types/node": "20.11.17"
   }
 }
