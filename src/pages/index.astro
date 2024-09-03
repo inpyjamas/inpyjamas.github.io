@@ -14,26 +14,23 @@ const backupData = [
   {
     name: 'ws-broadcast',
     html_url: 'https://github.com/inpyjamas/ws-broadcast',
-    stargazers_count: 5,
-    updated_at: '2021-12-28T20:14:24Z',
   },
   {
     name: 'inpyjamas.github.io',
     html_url: 'https://github.com/inpyjamas/inpyjamas.github.io',
-    stargazers_count: 1,
-    updated_at: '2022-11-15T05:18:02Z',
   },
   {
     name: 'renovate-config',
     html_url: 'https://github.com/inpyjamas/renovate-config',
-    stargazers_count: 1,
-    updated_at: '2022-04-05T08:04:35Z',
   },
   {
-    name: 'schemas',
-    html_url: 'https://github.com/inpyjamas/schemas',
-    stargazers_count: 1,
-    updated_at: '2021-03-14T08:42:56Z',
+    name: 'P5 Code Sandbox',
+    html_url: 'https://github.com/ff6347/p5-code-sandbox',
+  },
+  { name: 'Notes', html_url: 'https://github.com/ff6347/notepad' },
+  {
+    name: 'to-markdown-cli',
+    html_url: 'https://github.com/ff6347/to-markdown-cli',
   },
 ];
 
@@ -62,6 +59,16 @@ async function load() {
     data = (
       repos.filter((repo) => Object.keys(repo).length !== 0) as Repo[]
     ).sort((a, b) => b.stargazers_count - a.stargazers_count);
+    // @ts-ignore
+    data.push(...backupData);
+    data = Array.from(new Set(data));
+    data = Array.from(
+      data.reduce((map, item) => {
+        const existing = map.get(item.name);
+        map.set(item.name, existing ? { ...existing, ...item } : item);
+        return map;
+      }, new Map<string, (typeof data)[0]>()),
+    ).map(([_, value]) => value);
   } else {
     data = backupData;
   }
