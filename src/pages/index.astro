@@ -1,214 +1,260 @@
 ---
 let data;
 interface Repo {
-  name: string;
-  html_url: string;
-  stargazers_count: number;
-  updated_at: string;
-  private: boolean;
-  fork: boolean;
-  archived: boolean;
+	name: string;
+	html_url: string;
+	stargazers_count: number;
+	updated_at: string;
+	private: boolean;
+	fork: boolean;
+	archived: boolean;
 }
 
 const backupData = [
-  {
-    name: 'ws-broadcast',
-    html_url: 'https://github.com/inpyjamas/ws-broadcast',
-  },
-  {
-    name: 'inpyjamas.github.io',
-    html_url: 'https://github.com/inpyjamas/inpyjamas.github.io',
-  },
-  {
-    name: 'renovate-config',
-    html_url: 'https://github.com/inpyjamas/renovate-config',
-  },
-  {
-    name: 'P5 Code Sandbox',
-    html_url: 'https://github.com/ff6347/p5-code-sandbox',
-  },
-  { name: 'Notes', html_url: 'https://github.com/ff6347/notepad' },
-  {
-    name: 'to-markdown-cli',
-    html_url: 'https://github.com/ff6347/to-markdown-cli',
-  },
+	{
+		name: 'Named CSS Colors Search',
+		html_url: 'https://colornames.inpyjamas.dev/',
+		description: 'Search for named CSS colors',
+	},
+	{
+		name: 'Timers',
+		html_url: 'https://timers.inpyjamas.dev/',
+		description: 'A timer app. Control it by adding URL params ?secs=600',
+	},
+	{
+		name: 'Notepad for Thoughts',
+		html_url: 'https://notes.inpyjamas.dev/',
+		description: 'Write down things, keep them in local storage',
+	},
+	{
+		name: 'Assets Library',
+		html_url: 'https://assets.qawsed.site/',
+		description: 'A collection of assets for projects, reset.css, etc.',
+	},
+	{
+		name: 'Easing Functions',
+		html_url: 'https://easing.inpyjamas.dev/',
+		description:
+			'Easing functions based on Robert Penners work, intended for p5.js',
+	},
+	{
+		name: 'p5.js Sandbox',
+		html_url: 'https://p5.inpyjamas.dev/',
+		description:
+			'A sandbox for p5.js sketches with live preview, kept in local storage',
+	},
+	{
+		name: 'ws-broadcast',
+		html_url: 'https://github.com/inpyjamas/ws-broadcast',
+		description: 'A websocket server and client for broadcasting messages',
+	},
+	{
+		name: 'inpyjamas.github.io',
+		html_url: 'https://github.com/inpyjamas/inpyjamas.github.io',
+		description: 'This website',
+	},
+	{
+		name: 'renovate-config',
+		html_url: 'https://github.com/inpyjamas/renovate-config',
+		description: 'Renovate config for inpyjamas',
+	},
+	{
+		name: 'to-markdown-cli',
+		html_url: 'https://github.com/ff6347/to-markdown-cli',
+		description: 'Convert HTML to Markdown',
+	},
+	{
+		name: 'all hex colors',
+		html_url: 'https://allhexcolors.inpyjamas.dev/',
+		description:
+			'little experiment calculating all possible hex colors and displaying them',
+	},
+	// <li><a href="https://colornames.inpyjamas.dev/">Named CSS Colors Search</a></li>
+	// 	<li><a href="https://timers.inpyjamas.dev/">Timers</a></li>
+	// 	<li><a href="https://notes.inpyjamas.dev/">Notepad for Thoughts</a></li>
+	// 	<li><a href="https://assets.qawsed.site/">Assets Library</a></li>
+	// 	<li><a href="https://p5.inpyjamas.dev/">p5.js Sandbox</a></li>
+	// 	<li><a href="https://easing.inpyjamas.dev/">Easing Functions</a></li>
 ];
 
 async function load() {
-  const res = await fetch('http://api.github.com/orgs/inpyjamas/repos', {
-    headers: {
-      Accept: 'application/vnd.github.v3+json',
-      authorization: `token ${process.env.GITHUB_TOKEN}`,
-    },
-  });
-  if (res.status === 200) {
-    const json = (await res.json()) as Repo[];
-    const repos = json.map((repo) => {
-      return repo.private === false &&
-        repo.fork === false &&
-        repo.archived === false
-        ? {
-            name: repo.name,
-            html_url: repo.html_url,
-            stargazers_count: repo.stargazers_count,
-            updated_at: repo.updated_at,
-          }
-        : {};
-    });
+	const res = await fetch('http://api.github.com/orgs/inpyjamas/repos', {
+		headers: {
+			Accept: 'application/vnd.github.v3+json',
+			authorization: `token ${process.env.GITHUB_TOKEN}`,
+		},
+	});
+	if (res.status === 200) {
+		const json = (await res.json()) as Repo[];
+		const repos = json.map((repo) => {
+			return repo.private === false &&
+				repo.fork === false &&
+				repo.archived === false
+				? {
+						name: repo.name,
+						html_url: repo.html_url,
+						stargazers_count: repo.stargazers_count,
+						updated_at: repo.updated_at,
+					}
+				: {};
+		});
 
-    data = (
-      repos.filter((repo) => Object.keys(repo).length !== 0) as Repo[]
-    ).sort((a, b) => b.stargazers_count - a.stargazers_count);
-    // @ts-ignore
-    data.push(...backupData);
-    data = Array.from(new Set(data));
-    data = Array.from(
-      data.reduce((map, item) => {
-        const existing = map.get(item.name);
-        map.set(item.name, existing ? { ...existing, ...item } : item);
-        return map;
-      }, new Map<string, (typeof data)[0]>()),
-    ).map(([_, value]) => value);
-  } else {
-    data = backupData;
-  }
+		data = (
+			repos.filter((repo) => Object.keys(repo).length !== 0) as Repo[]
+		).sort((a, b) => b.stargazers_count - a.stargazers_count);
+		// @ts-ignore
+		data.push(...backupData);
+		data = Array.from(new Set(data));
+		data = Array.from(
+			data.reduce((map, item) => {
+				const existing = map.get(item.name);
+				map.set(item.name, existing ? { ...existing, ...item } : item);
+				return map;
+			}, new Map<string, (typeof data)[0]>()),
+		).map(([_, value]) => value);
+	} else {
+		data = backupData;
+	}
 }
 await load();
 ---
 
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>inpyjamas.dev</title>
-    <style is:global>
-      html {
-        box-sizing: border-box;
-      }
-      *,
-      *:before,
-      *:after {
-        box-sizing: inherit;
-      }
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>inpyjamas.dev</title>
+		<style is:global>
+			html {
+				box-sizing: border-box;
+			}
+			*,
+			*:before,
+			*:after {
+				box-sizing: inherit;
+			}
 
-      html {
-        font-size: 100%;
-      } /*16px*/
-      html {
-        height: 100%;
-      }
+			html {
+				font-size: 100%;
+			} /*16px*/
+			html {
+				height: 100%;
+			}
 
-      body {
-        align-items: center;
-        background-color: white;
-        color: #1d2429;
-        display: flex;
-        font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo,
-          Consolas, 'DejaVu Sans Mono', monospace;
-        font-weight: normal;
+			body {
+				align-items: center;
+				background-color: white;
+				color: #1d2429;
+				display: flex;
+				font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo,
+					Consolas, 'DejaVu Sans Mono', monospace;
+				font-weight: normal;
 
-        justify-content: center;
-        line-height: 1.65;
-        margin: 0 auto;
-        max-width: 50em;
-        padding: 4em 1em;
-      }
+				justify-content: center;
+				line-height: 1.65;
+				margin: 0 auto;
+				max-width: 50em;
+				padding: 4em 1em;
+			}
 
-      p {
-        margin-bottom: 1.15rem;
-        text-align: left;
-      }
-      ul {
-        text-align: left;
-      }
+			p {
+				margin-bottom: 1.15rem;
+				text-align: left;
+			}
+			ul {
+				text-align: left;
+			}
 
-      h1,
-      h2,
-      h3,
-      h4,
-      h5 {
-        margin: 2.75rem 0 1.05rem;
-        font-family: 'Fira Mono', monospace;
-        font-weight: 400;
-        line-height: 1.15;
-      }
+			h1,
+			h2,
+			h3,
+			h4,
+			h5 {
+				margin: 2.75rem 0 1.05rem;
+				font-family: 'Fira Mono', monospace;
+				font-weight: 400;
+				line-height: 1.15;
+			}
 
-      h1 {
-        margin-top: 0;
-        font-size: 2.488em;
-      }
+			h1 {
+				margin-top: 0;
+				font-size: 2.488em;
+			}
 
-      ul {
-        list-style: none;
-      }
-      li::before {
-        content: '☛ ';
-        color: tomato;
-      }
-      li:hover::before {
-        content: '⤻ ';
-        color: darkgray;
-      }
-      a {
-        color: tomato;
-        text-decoration: none;
-      }
-      a:hover {
-        color: darkgray;
-      }
+			ul {
+				list-style: none;
+			}
+			li::before {
+				content: '☛ ';
+				color: tomato;
+			}
+			li:hover::before {
+				content: '⤻ ';
+				color: darkgray;
+			}
+			a {
+				color: tomato;
+				text-decoration: none;
+			}
+			a:hover {
+				color: darkgray;
+			}
 
-      /* Portrait and Landscape */
-      @media only screen and (max-device-width: 800px) and (-webkit-min-device-pixel-ratio: 2) {
-        html {
-          font-size: 60%;
-        }
-        body {
-          height: 100vh;
-          margin: 0 auto;
-          padding: 0 2em;
-        }
-        .container {
-          text-align: left;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>hello @inpyjamas</h1>
+			/* Portrait and Landscape */
+			@media only screen and (max-device-width: 800px) and (-webkit-min-device-pixel-ratio: 2) {
+				html {
+					font-size: 60%;
+				}
+				body {
+					height: 100vh;
+					margin: 0 auto;
+					padding: 0 2em;
+				}
+				.container {
+					text-align: left;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>hello @inpyjamas</h1>
 
-      <p>still in dev<span id="spinner">...</span></p>
+			<p>still in dev<span id="spinner">...</span></p>
 
-      <script>
-        document.addEventListener('DOMContentLoaded', () => {
-          let count = 0;
-          let dots = ['.', '..', '...'];
+			<script>
+				document.addEventListener('DOMContentLoaded', () => {
+					let count = 0;
+					let dots = ['.', '..', '...'];
 
-          const spinner = document.querySelector('#spinner');
-          if (spinner) {
-            setInterval(() => {
-              spinner.textContent = dots[count % dots.length];
-              count++;
-            }, 500);
-          }
-        });
-      </script>
+					const spinner = document.querySelector('#spinner');
+					if (spinner) {
+						setInterval(() => {
+							spinner.textContent = dots[count % dots.length];
+							count++;
+						}, 500);
+					}
+				});
+			</script>
 
-      <hr />
-      <p>
-        Until then checkout these repos
-        <ul>
-          {
-            data.map((repo) => (
-              <li>
-                <a href={repo.html_url}>{repo.name}</a>
-              </li>
-            ))
-          }
-        </ul>
-      </p>
-    </div>
-  </body>
+			<hr />
+			<p>
+				Until then checkout these repos and projects
+				<ul>
+					{
+						data.map((repo) => (
+							<li>
+								<a href={repo.html_url} target="_blank">
+									{repo.name}
+								</a>{' '}
+								- {repo.description}
+							</li>
+						))
+					}
+				</ul>
+			</p>
+		</div>
+	</body>
 </html>
