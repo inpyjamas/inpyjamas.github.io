@@ -8,45 +8,58 @@ interface Repo {
 	private: boolean;
 	fork: boolean;
 	archived: boolean;
+	description: string;
+	homepage: string;
 }
 
 const backupData = [
 	{
+		name: 'Image Prompt Builder/Collector ',
+		homepage: 'https://prompts.inpyjamas.dev/',
+		description:
+			'Allows you to build image prompts and collect them in local storage',
+	},
+	{
 		name: 'Named CSS Colors Search',
-		html_url: 'https://colornames.inpyjamas.dev/',
+		homepage: 'https://colornames.inpyjamas.dev/',
 		description: 'Search for named CSS colors',
 	},
 	{
 		name: 'Timers',
-		html_url: 'https://timers.inpyjamas.dev/',
+		homepage: 'https://timers.inpyjamas.dev/',
 		description: 'A timer app. Control it by adding URL params ?secs=600',
 	},
 	{
 		name: 'Notepad for Thoughts',
-		html_url: 'https://notes.inpyjamas.dev/',
+		homepage: 'https://notes.inpyjamas.dev/',
 		description: 'Write down things, keep them in local storage',
 	},
 	{
 		name: 'Ratios',
-		html_url: 'https://ratios.inpyjamas.dev/',
+		homepage: 'https://ratios.inpyjamas.dev/',
 		description: 'A tool for calculating aspect ratios',
 	},
 	{
 		name: 'Assets Library',
-		html_url: 'https://assets.qawsed.site/',
+		homepage: 'https://assets.qawsed.site/',
 		description: 'A collection of assets for projects, reset.css, etc.',
 	},
 	{
 		name: 'Easing Functions',
-		html_url: 'https://easing.inpyjamas.dev/',
+		homepage: 'https://easing.inpyjamas.dev/',
 		description:
 			'Easing functions based on Robert Penners work, intended for p5.js',
 	},
 	{
 		name: 'p5.js Sandbox',
-		html_url: 'https://p5.inpyjamas.dev/',
+		homepage: 'https://p5.inpyjamas.dev/',
 		description:
 			'A sandbox for p5.js sketches with live preview, kept in local storage',
+	},
+	{
+		name: 'p5.js Starter Kit',
+		homepage: 'https://p5kit.inpyjamas.dev/',
+		description: 'An opinionated starter kit for p5.js projects',
 	},
 	{
 		name: 'ws-broadcast',
@@ -70,7 +83,7 @@ const backupData = [
 	},
 	{
 		name: 'all hex colors',
-		html_url: 'https://allhexcolors.inpyjamas.dev/',
+		homepage: 'https://allhexcolors.inpyjamas.dev/',
 		description:
 			'little experiment calculating all possible hex colors and displaying them',
 	},
@@ -100,9 +113,13 @@ async function load() {
 						html_url: repo.html_url,
 						stargazers_count: repo.stargazers_count,
 						updated_at: repo.updated_at,
+						description: repo.description,
+						homepage: repo.homepage,
 					}
 				: {};
 		});
+
+		console.log(repos);
 
 		data = (
 			repos.filter((repo) => Object.keys(repo).length !== 0) as Repo[]
@@ -110,18 +127,45 @@ async function load() {
 		// @ts-ignore
 		data.push(...backupData);
 		data = Array.from(new Set(data));
-		data = Array.from(
-			data.reduce((map, item) => {
-				const existing = map.get(item.name);
-				map.set(item.name, existing ? { ...existing, ...item } : item);
-				return map;
-			}, new Map<string, (typeof data)[0]>()),
-		).map(([_, value]) => value);
+		const uniqueMap = data.reduce((map, item) => {
+			// Normalize URLs by removing trailing slashes
+			const normalizeUrl = (url) => url?.replace(/\/$/, '') || '';
+
+			const primaryKey =
+				item.homepage && item.homepage.startsWith('https')
+					? normalizeUrl(item.homepage)
+					: normalizeUrl(item.html_url);
+
+			// Check if this item already exists under either possible key
+			const homepageKey =
+				item.homepage && item.homepage.startsWith('https')
+					? normalizeUrl(item.homepage)
+					: null;
+			const htmlKey = normalizeUrl(item.html_url);
+
+			const existingByHomepage = homepageKey ? map.get(homepageKey) : null;
+			const existingByHtml = map.get(htmlKey);
+			const existing = existingByHomepage || existingByHtml;
+
+			// Remove any existing entries to avoid duplicates
+			if (existingByHomepage && homepageKey) map.delete(homepageKey);
+			if (existingByHtml) map.delete(htmlKey);
+
+			map.set(primaryKey, existing ? { ...item, ...existing } : item);
+			return map;
+		}, new Map<string, (typeof data)[0]>());
+		data = Array.from(uniqueMap.values());
 	} else {
 		data = backupData;
 	}
 }
-await load();
+await load()
+	.then(() => {
+		// console.log(data);
+	})
+	.catch((err) => {
+		console.error(err);
+	});
 ---
 
 <html lang="en">
@@ -249,14 +293,20 @@ await load();
 				Until then checkout these repos and projects
 				<ul>
 					{
-						data.map((repo) => (
-							<li>
-								<a href={repo.html_url} target="_blank">
-									{repo.name}
-								</a>{' '}
-								- {repo.description}
-							</li>
-						))
+						data.map((repo) => {
+							const linkUrl =
+								repo.homepage && repo.homepage.startsWith('https')
+									? repo.homepage
+									: repo.html_url;
+							return (
+								<li>
+									<a href={linkUrl} target="_blank">
+										{repo.name}
+									</a>{' '}
+									- {repo.description}
+								</li>
+							);
+						})
 					}
 				</ul>
 			</p>
